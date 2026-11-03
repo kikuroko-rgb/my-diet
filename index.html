@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>我的心灵避难所与减重日记</title>
+  <style>
+    :root {
+      --bg-cream: #FAF7F2;
+      --card-bg: #FFFFFF;
+      --accent-sage: #94A89A;
+      --accent-sage-light: #E8EFEA;
+      --accent-butter: #F7E7CE;
+      --accent-warm: #E2A781;
+      --accent-rose: #E5A9A9;
+      --accent-rose-light: #FDF0F0;
+      --text-main: #3C3836;
+      --text-sub: #7C746E;
+      --border-color: #EFE7DE;
+      --radius-lg: 18px;
+      --radius-md: 12px;
+      --shadow-soft: 0 4px 16px rgba(148, 128, 110, 0.08);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    body {
+      background-color: var(--bg-cream);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.5;
+      padding-bottom: 90px;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(250, 247, 242, 0.92);
+      backdrop-filter: blur(10px);
+      padding: 12px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .app-title { font-size: 1.15rem; font-weight: 700; color: var(--accent-sage); }
+    .sos-btn {
+      background: var(--accent-rose-light);
+      color: #C85A5A;
+      border: 1px solid #F5C6C6;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      animation: pulse 2.5s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.03); }
+    }
+
+    .banner-quote {
+      margin: 14px 16px 0;
+      background: var(--accent-sage-light);
+      border-radius: var(--radius-md);
+      padding: 10px 14px;
+      font-size: 0.85rem;
+      color: #435E4B;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      border-left: 4px solid var(--accent-sage);
+    }
+
+    .container { max-width: 540px; margin: 0 auto; padding: 14px 16px; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    .diary-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      margin-bottom: 18px;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid var(--border-color);
+    }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px dashed var(--border-color);
+    }
+    .date-badge { font-weight: 700; font-size: 1rem; color: var(--text-main); }
+    .weight-chip {
+      background: var(--bg-cream);
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 0.82rem;
+      color: var(--text-sub);
+    }
+    .seal-chip {
+      background: #E8F5E9;
+      color: #2E7D32;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    .feelings-list { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+    .feeling-item {
+      background: #F4EFEA;
+      color: var(--text-sub);
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 0.78rem;
+    }
+    .feeling-item.active { background: var(--accent-butter); color: #6C5428; font-weight: 600; }
+
+    .meal-block {
+      background: var(--bg-cream);
+      border-radius: var(--radius-md);
+      padding: 10px 12px;
+      margin-bottom: 10px;
+    }
+    .meal-title {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--accent-sage);
+      margin-bottom: 4px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .meal-motive {
+      font-size: 0.75rem;
+      background: #FFF;
+      padding: 2px 8px;
+      border-radius: 8px;
+      color: var(--accent-warm);
+    }
+    .meal-content { font-size: 0.9rem; margin-bottom: 6px; }
+    .nutri-pills { display: flex; flex-wrap: wrap; gap: 4px; }
+    .nutri-pill {
+      font-size: 0.72rem;
+      background: rgba(255,255,255,0.7);
+      padding: 2px 6px;
+      border-radius: 6px;
+      color: var(--text-sub);
+    }
+
+    .diary-photo {
+      width: 100%;
+      max-height: 280px;
+      object-fit: cover;
+      border-radius: var(--radius-md);
+      margin-top: 10px;
+      border: 1px solid var(--border-color);
+    }
+
+    .form-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid var(--border-color);
+      margin-bottom: 18px;
+    }
+    .form-group { margin-bottom: 14px; }
+    .form-label { display: block; font-size: 0.88rem; font-weight: 600; margin-bottom: 6px; }
+    .input-box {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      font-size: 0.9rem;
+      background: var(--bg-cream);
+      outline: none;
+    }
+    .checkbox-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
+    .tag-chip-choice {
+      display: inline-block;
+      padding: 6px 12px;
+      margin: 3px 2px;
+      background: var(--bg-cream);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+    .tag-chip-choice.selected {
+      background: var(--accent-sage-light);
+      border-color: var(--accent-sage);
+      color: #3B5843;
+      font-weight: 600;
+    }
+    .btn-main {
+      width: 100%;
+      padding: 12px;
+      background: var(--accent-sage);
+      color: #FFF;
+      border: none;
+      border-radius: var(--radius-md);
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .camera-box {
+      position: relative;
+      width: 100%;
+      height: 380px;
+      background: #000;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+    #cameraVideo { width: 100%; height: 100%; object-fit: cover; }
+    #ghostOverlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.35;
+      pointer-events: none;
+    }
+    .camera-tools { display: flex; gap: 8px; margin-bottom: 16px; }
+    .timelapse-viewer {
+      width: 100%;
+      height: 320px;
+      background: #EEE;
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+    #timelapseImg { width: 100%; height: 100%; object-fit: cover; }
+
+    .modal-mask {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(4px);
+      z-index: 999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .modal-mask.show { display: flex; }
+    .sos-dialog {
+      background: #FFF;
+      border-radius: var(--radius-lg);
+      padding: 22px 18px;
+      width: 100%;
+      max-width: 440px;
+      max-height: 85vh;
+      overflow-y: auto;
+    }
+    .sos-head {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #C85A5A;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .sos-step {
+      background: var(--accent-rose-light);
+      border-radius: var(--radius-md);
+      padding: 10px 14px;
+      margin-bottom: 10px;
+      font-size: 0.88rem;
+    }
+    .trash-box {
+      width: 100%;
+      height: 70px;
+      border: 1px dashed var(--accent-rose);
+      border-radius: var(--radius-md);
+      padding: 8px;
+      font-size: 0.85rem;
+      margin-top: 6px;
+      outline: none;
+    }
+
+    .tab-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 64px;
+      background: #FFF;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 100;
+    }
+    .tab-btn {
+      background: none;
+      border: none;
+      font-size: 0.75rem;
+      color: var(--text-sub);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+    }
+    .tab-btn.active { color: var(--accent-sage); font-weight: 700; }
+    .tab-btn span { font-size: 1.25rem; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="app-title">🌿 减重心灵避难所</div>
+    <button class="sos-btn" onclick="openSOS()">
+      <span>🚑 紧急救援 / SOS</span>
+    </button>
+  </header>
+
+  <div class="banner-quote" id="dailyBannerQuote">
+    <span>💡</span>
+    <div id="bannerQuoteText">加载专属清醒箴言中...</div>
+  </div>
+
+  <div class="container">
+    <!-- ==================== Tab 1: 瀑布流日记 ==================== -->
+    <section id="tab-diary" class="tab-content active">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+        <h3 style="font-size: 1rem; color: var(--text-main);">📖 每日蜕变手账</h3>
+        <button onclick="toggleRecordForm()" style="background:var(--accent-sage); color:#FFF; border:none; padding:6px 14px; border-radius:16px; font-size:0.8rem; cursor:pointer;">+ 记录今天</button>
+      </div>
+
+      <div id="recordFormWrap" class="form-card" style="display: none;">
+        <h4 style="margin-bottom: 12px; font-size:0.95rem;">✍️ 写入今日身体实录</h4>
+        
+        <div class="form-group">
+          <label class="form-label">今日日期</label>
+          <input type="date" id="inputDate" class="input-box">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">早起体重 (kg/斤，仅作为平和记录，不计算焦虑涨跌)</label>
+          <input type="text" id="inputWeight" class="input-box" placeholder="例: 141.2 或 70.6">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">16:00 节律执行</label>
+          <label style="font-size:0.85rem; display:flex; align-items:center; gap:6px;">
+            <input type="checkbox" id="checkSealed" checked> 下午 4 点准时封口（纯净空腹，内脏排空休假）
+          </label>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">诚实身体体感 (比秤更真实，勾选属于你的感觉)</label>
+          <div class="checkbox-grid" id="feelingsGroup">
+            <label style="font-size:0.8rem;"><input type="checkbox" value="肚子变软变平"> 肚子变软变平</label>
+            <label style="font-size:0.8rem;"><input type="checkbox" value="走路轻盈不喘"> 走路轻盈不喘</label>
+            <label style="font-size:0.8rem;"><input type="checkbox" value="裤头肩膀变松"> 裤头肩膀变松</label>
+            <label style="font-size:0.8rem;"><input type="checkbox" value="皮肤消肿清爽"> 皮肤消肿清爽</label>
+            <label style="font-size:0.8rem;"><input type="checkbox" value="清晨掌控感满满"> 清晨掌控感满满</label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">早午餐记录（不称重、不算卡）</label>
+          <input type="text" id="mealDesc" class="input-box" placeholder="例: 鸡蛋全麦面包 + 牛肉炒青菜" style="margin-bottom:6px;">
+          <div style="font-size:0.8rem; margin-bottom:4px;">进食动机觉察：</div>
+          <div id="motiveGroup">
+            <span class="tag-chip-choice selected" onclick="selectChip(this, 'motive')">🟢 身体真饿了</span>
+            <span class="tag-chip-choice" onclick="selectChip(this, 'motive')">🟡 享受美味</span>
+            <span class="tag-chip-choice" onclick="selectChip(this, 'motive')">🟣 怕挨饿提前硬塞</span>
+            <span class="tag-chip-choice" onclick="selectChip(this, 'motive')">⚡ 情绪索取多巴胺</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">包含的滋养元素</label>
+          <div class="checkbox-grid" id="nutriGroup">
+            <label style="font-size:0.8rem;"><input type="checkbox" value="🥩优质蛋白"> 🥩 优质蛋白</label>
+            <label style="font-size:0.8rem;"><input type="checkbox" value="🍚复合碳水"> 🍚 复合碳水</label>
+            <label style="font-size:0.8rem;"><input type="checkbox" value="🥬深色蔬菜纤维"> 🥬 深色蔬菜纤维</label>
+            <label style="font-size:0.8rem;"><input type="checkbox" value="🥑优质油脂(不水煮)"> 🥑 炒菜油脂润肠</label>
+            <label style="font-size:0.8rem;"><input type="checkbox" value="💧充足温水"> 💧 充足温水</label>
+          </div>
+        </div>
+
+        <button class="btn-main" onclick="saveDiaryEntry()">完成并收录入日记</button>
+      </div>
+
+      <div id="diaryFeed"></div>
+    </section>
+
+    <!-- ==================== Tab 2: 时光相机 ==================== -->
+    <section id="tab-camera" class="tab-content">
+      <div class="form-card">
+        <h3 style="font-size:1rem; margin-bottom:6px;">📸 定格对比时光机</h3>
+        <p style="font-size:0.82rem; color:var(--text-sub); margin-bottom:12px;">
+          画面已覆盖上次拍摄的“半透明幽灵轮廓”，对准中线站姿拍照，动图不晃动。
+        </p>
+
+        <div class="camera-box">
+          <video id="cameraVideo" autoplay playsinline muted></video>
+          <img id="ghostOverlay" alt="幽灵对齐蒙版">
+        </div>
+
+        <div class="camera-tools">
+          <button class="btn-main" onclick="startCamera()" style="background:var(--accent-butter); color:#5C4623;">打开摄像头</button>
+          <button class="btn-main" onclick="takeSnapshot()">拍照打卡</button>
+        </div>
+
+        <div style="font-size:0.82rem; color:var(--text-sub); margin-bottom:8px;">或从相册选一张存入手机本地：</div>
+        <input type="file" id="photoFileInput" accept="image/*" class="input-box" onchange="handleFilePhoto(event)">
+      </div>
+
+      <div class="form-card">
+        <h4 style="font-size:0.95rem; margin-bottom:8px;">🎞️ 连续蜕变翻页动图</h4>
+        <div class="timelapse-viewer">
+          <img id="timelapseImg" alt="动图播放器">
+        </div>
+        <button class="btn-main" onclick="playTimelapse()">一键播放定格成长动图 (按时间连播)</button>
+      </div>
+    </section>
+
+    <!-- ==================== Tab 3: 营养分析 ==================== -->
+    <section id="tab-analysis" class="tab-content">
+      <div class="form-card">
+        <h3 style="font-size:1rem; margin-bottom:8px;">🥗 近期营养与节律洞察</h3>
+        <p style="font-size:0.82rem; color:var(--text-sub); margin-bottom:12px;">
+          我们不精密计较卡路里，重点审视是否给身体提供了足够的抗炎与饱腹原料。
+        </p>
+        <div id="analysisSummary" style="font-size:0.88rem; line-height:1.7;">
+          正在分析近几天的进食结构...
+        </div>
+      </div>
+
+      <div class="form-card">
+        <h4 style="font-size:0.95rem; margin-bottom:8px;">💡 晨间坡走建议（彻底减负）</h4>
+        <p style="font-size:0.85rem; color:var(--text-main); line-height:1.6;">
+          • 彻底告别 45 分钟慢跑酷刑（高心率消耗糖原，诱发晚间暴食反扑）。<br>
+          • <strong>极简晨间坡走</strong>：跑步机坡度 2，速度 5.2，仅需 15 分钟，心率 110~130 微出汗即停。<br>
+          • 不想动就彻底休息，4点后准时封口你已经锁定了 90% 的胜局！
+        </p>
+      </div>
+    </section>
+
+    <!-- ==================== Tab 4: 避难所与云同步 ==================== -->
+    <section id="tab-quotes" class="tab-content">
+      <!-- GitHub 云同步专属卡片 -->
+      <div class="form-card" style="border: 2px solid var(--accent-sage-light);">
+        <h3 style="font-size:1rem; margin-bottom:6px; color:#3B5843;">☁️ GitHub 多端数据同步</h3>
+        <p style="font-size:0.8rem; color:var(--text-sub); margin-bottom:10px;">
+          照片 100% 留在手机内部保护隐私，文字数据通过 GitHub 仓库自动多端漫游。
+        </p>
+        <div class="form-group" style="margin-bottom:8px;">
+          <label style="font-size:0.8rem; font-weight:600;">仓库路径</label>
+          <input type="text" id="ghRepo" class="input-box" value="kikuroko-rgb/my-diet-data" placeholder="用户名/仓库名">
+        </div>
+        <div class="form-group" style="margin-bottom:10px;">
+          <label style="font-size:0.8rem; font-weight:600;">GitHub Token (ghp_ 开头)</label>
+          <input type="password" id="ghToken" class="input-box" placeholder="粘贴你的专属钥匙 Token">
+        </div>
+        <div style="display:flex; gap:8px;">
+          <button class="btn-main" onclick="syncToGitHub()" style="background:#557A60; flex:1;">☁️ 上传文字日记</button>
+          <button class="btn-main" onclick="pullFromGitHub()" style="background:var(--accent-butter); color:#5C4623; flex:1;">🔄 下拉最新日记</button>
+        </div>
+      </div>
+
+      <div class="form-card">
+        <h3 style="font-size:1rem; margin-bottom:8px;">💌 细胞对话与清醒金句库</h3>
+        <div id="quotesList" style="display:flex; flex-direction:column; gap:10px;"></div>
+      </div>
+
+      <div class="form-card">
+        <h4 style="font-size:0.95rem; margin-bottom:8px;">📥 离线 JSON 备份</h4>
+        <button class="btn-main" onclick="exportData()" style="background:#8C9E92; margin-bottom:8px;">导出离线备份 (JSON)</button>
+        <textarea id="importBox" class="input-box" placeholder="粘贴离线 JSON 数据在此导入..." style="height:70px; margin-bottom:8px;"></textarea>
+        <button class="btn-main" onclick="importData()" style="background:var(--bg-cream); color:var(--text-main); border:1px solid var(--border-color);">本地导入覆盖</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- SOS 弹窗 -->
+  <div class="modal-mask" id="sosModal">
+    <div class="sos-dialog">
+      <div class="sos-head">
+        <span>🚑 紧急救援与神经复位</span>
+        <span style="cursor:pointer; color:var(--text-sub);" onclick="closeSOS()">✕</span>
+      </div>
+
+      <div class="sos-step">
+        <strong>第 1 步：物理阻断（立刻离开现场）</strong><br>
+        去洗手间用温水彻底漱口，打破口腔残留味道的第二口扳机！
+      </div>
+
+      <div class="sos-step">
+        <strong>第 2 步：0热量热盐水复位（平复心慌心率）</strong><br>
+        倒一杯 45°C 温开水，放入 1~2g 盐冲成淡盐水大口喝下。补充钠离子能瞬间平息代偿性飙升的交感心率，胃里有温热感，肚子本质不饿！
+      </div>
+
+      <div class="sos-step" style="background:#FFF3E0; border: 1px solid #FFE0B2;">
+        <strong>第 3 步：切断自毁判词（粉碎白衬衫效应）</strong><br>
+        哪怕刚刚咬了一口，身体只摄入了几十大卡，连 10 克纯脂肪都长不出！不是衣服脏了就要撕烂。今晚立刻到此为止，明天 4 点前吃饱家常饭！
+      </div>
+
+      <div style="margin-top:10px;">
+        <label style="font-size:0.82rem; font-weight:600; color:var(--text-sub);">
+          受了委屈？在下方把垃圾倾倒出来，点击粉碎（不咽进肚子里）：
+        </label>
+        <textarea id="trashText" class="trash-box" placeholder="在这里疯狂打字倾倒，把烦躁全吐出来..."></textarea>
+        <button class="btn-main" onclick="shredTrash()" style="background:#E5A9A9; margin-top:6px; padding:8px;">🔥 物理粉碎情绪垃圾</button>
+      </div>
+    </div>
+  </div>
+
+  <nav class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('tab-diary', this)"><span>📖</span>手账</button>
+    <button class="tab-btn" onclick="switchTab('tab-camera', this)"><span>📸</span>时光机</button>
+    <button class="tab-btn" onclick="switchTab('tab-analysis', this)"><span>🥗</span>营养</button>
+    <button class="tab-btn" onclick="switchTab('tab-quotes', this)"><span>💌</span>避难所</button>
+  </nav>
+
+  <script>
+    const DB_NAME = "HealingDietDB";
+    const DB_VERSION = 1;
+    let db = null;
+
+    const DEFAULT_QUOTES = [
+      "历史铁证：大学毕业后我曾温婉坚持4个月真真切切瘦到110斤！我的基因没有任何减重障碍！",
+      "今天早上秤若波动，只是盐分抓住了水分或肠道未排空。昨天4点后排空，体内绝无可能凭空长出脂肪！",
+      "我的神经系统是开关式的（0与1），4点后不吃不是刑罚，是给内脏放假与夜间深度燃脂结界。",
+      "心率加快、心情烦躁不是肚子饿，是心里受了委屈在索取多巴胺！不咬第一口就是捍卫自己的领地！",
+      "我不死磕45分钟慢跑酷刑，想走就晃悠15分钟晨间坡走，不想动就躺平，4点封口已锁定90%胜局！",
+      "咬了一口只是一次偶发感冒，绝不连带摆烂3周。明天4点前正常吃家常饭，一切无缝重接！"
+    ];
+
+    let appState = {
+      entries: [
+        {
+          id: "init-sample",
+          date: "2026-11-03",
+          weight: "141.6",
+          sealed: true,
+          feelings: ["肚子变软变平", "清晨掌控感满满"],
+          mealDesc: "清晨水煮蛋+杂粮馒头，午餐家常炒瘦肉西花菜",
+          motive: "🟢 身体真饿了",
+          nutrients: ["🥩优质蛋白", "🍚复合碳水", "🥬深色蔬菜纤维", "🥑优质油脂(不水煮)"],
+          photoId: null
+        }
+      ],
+      quotes: DEFAULT_QUOTES
+    };
+
+    function initDB() {
+      return new Promise((resolve) => {
+        const req = indexedDB.open(DB_NAME, DB_VERSION);
+        req.onupgradeneeded = (e) => {
+          const dbInstance = e.target.result;
+          if (!dbInstance.objectStoreNames.contains("photos")) {
+            dbInstance.createObjectStore("photos", { keyPath: "id" });
+          }
+        };
+        req.onsuccess = (e) => { db = e.target.result; resolve(); };
+        req.onerror = () => resolve();
+      });
+    }
+
+    function savePhotoToDB(id, base64) {
+      if (!db) return;
+      const tx = db.transaction("photos", "readwrite");
+      tx.objectStore("photos").put({ id, data: base64 });
+    }
+
+    function getPhotoFromDB(id) {
+      return new Promise((resolve) => {
+        if (!db) return resolve(null);
+        const tx = db.transaction("photos", "readonly");
+        const req = tx.objectStore("photos").get(id);
+        req.onsuccess = () => resolve(req.result ? req.result.data : null);
+        req.onerror = () => resolve(null);
+      });
+    }
+
+    function loadSavedState() {
+      const stored = localStorage.getItem("DietApp_State");
+      if (stored) {
+        try { appState = JSON.parse(stored); } catch (e) {}
+      }
+      renderBannerQuote();
+      renderDiaryFeed();
+      renderQuotesList();
+      renderAnalysis();
+      updateGhostOverlay();
+      
+      const savedToken = localStorage.getItem("gh_token");
+      if (savedToken && document.getElementById("ghToken")) {
+        document.getElementById("ghToken").value = savedToken;
+      }
+    }
+
+    function persistState() {
+      localStorage.setItem("DietApp_State", JSON.stringify(appState));
+      renderDiaryFeed();
+      renderQuotesList();
+      renderAnalysis();
+      updateGhostOverlay();
+    }
+
+    function switchTab(tabId, el) {
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+      el.classList.add('active');
+      if (tabId === 'tab-camera') updateGhostOverlay();
+    }
+
+    function renderBannerQuote() {
+      const quote = appState.quotes[Math.floor(Math.random() * appState.quotes.length)] || DEFAULT_QUOTES[0];
+      document.getElementById("bannerQuoteText").innerText = quote;
+    }
+
+    function renderQuotesList() {
+      const wrap = document.getElementById("quotesList");
+      wrap.innerHTML = "";
+      appState.quotes.forEach((q, idx) => {
+        const item = document.createElement("div");
+        item.style.cssText = "background:var(--bg-cream); border-left:3px solid var(--accent-sage); padding:10px 12px; border-radius:8px; font-size:0.85rem; line-height:1.5;";
+        item.innerText = `${idx + 1}. ${q}`;
+        wrap.appendChild(item);
+      });
+    }
+
+    async function renderDiaryFeed() {
+      const feed = document.getElementById("diaryFeed");
+      feed.innerHTML = "";
+      const sorted = [...appState.entries].sort((a,b) => (b.date || "").localeCompare(a.date || ""));
+
+      for (let item of sorted) {
+        const card = document.createElement("div");
+        card.className = "diary-card";
+        let feelingsHtml = (item.feelings || []).map(f => `<span class="feeling-item active">✨ ${f}</span>`).join("");
+        let nutriPills = (item.nutrients || []).map(n => `<span class="nutri-pill">${n}</span>`).join("");
+
+        let photoHtml = "";
+        if (item.photoId) {
+          const photoSrc = await getPhotoFromDB(item.photoId);
+          if (photoSrc) {
+            photoHtml = `<img src="${photoSrc}" class="diary-photo" alt="打卡照">`;
+          } else {
+            photoHtml = `<div style="font-size:0.75rem; color:var(--text-sub); margin-top:8px;">📸 照片仅保留在当时拍照的设备本地</div>`;
+          }
+        }
+
+        card.innerHTML = `
+          <div class="card-header">
+            <div>
+              <span class="date-badge">${item.date}</span>
+              ${item.weight ? `<span class="weight-chip">秤重备忘: ${item.weight}</span>` : ""}
+            </div>
+            ${item.sealed ? `<span class="seal-chip">🔒 16:00 已封口</span>` : ""}
+          </div>
+          ${feelingsHtml ? `<div class="feelings-list">${feelingsHtml}</div>` : ""}
+          <div class="meal-block">
+            <div class="meal-title">
+              <span>🍽️ 白天餐食记录</span>
+              ${item.motive ? `<span class="meal-motive">${item.motive}</span>` : ""}
+            </div>
+            <div class="meal-content">${item.mealDesc || "正常营养家常便饭"}</div>
+            ${nutriPills ? `<div class="nutri-pills">${nutriPills}</div>` : ""}
+          </div>
+          ${photoHtml}
+        `;
+        feed.appendChild(card);
+      }
+    }
+
+    function renderAnalysis() {
+      const target = document.getElementById("analysisSummary");
+      const recent = appState.entries.slice(0, 5);
+      if (recent.length === 0) {
+        target.innerText = "暂无充足记录，记录 2~3 天后自动生成结构洞察。";
+        return;
+      }
+
+      let countProtein = 0, countFiber = 0, countSealed = 0;
+      recent.forEach(r => {
+        if ((r.nutrients || []).some(n => n.includes("蛋白"))) countProtein++;
+        if ((r.nutrients || []).some(n => n.includes("蔬菜"))) countFiber++;
+        if (r.sealed) countSealed++;
+      });
+
+      let advice = `<strong>近 ${recent.length} 次记录结构分析：</strong><br>`;
+      advice += `• 4点后封口达标率：${countSealed}/${recent.length} 次<br>`;
+      advice += `• 蛋白质覆盖率：${countProtein}/${recent.length} 次<br>`;
+      advice += `• 蔬菜纤维覆盖率：${countFiber}/${recent.length} 次<br><br>`;
+
+      if (countProtein <= 2) {
+        advice += `💡 <em>温馨贴士</em>：最近几天蛋白质可以稍微多加一块掌心瘦肉或水煮蛋，能有效延长白天的饱腹感，让傍晚封口更轻松！`;
+      } else if (countFiber <= 2) {
+        advice += `💡 <em>温馨贴士</em>：最近几天绿叶菜吃得略少，午餐多盛一小碗青菜，搭配正常炒菜油脂润滑肠道，身体更轻快～`;
+      } else {
+        advice += `✨ <em>太棒了</em>：宏量养分摄入很均衡，身体得到了充足滋养，能量通道正在平稳释放！`;
+      }
+      target.innerHTML = advice;
+    }
+
+    function toggleRecordForm() {
+      const el = document.getElementById("recordFormWrap");
+      el.style.display = (el.style.display === "none" || !el.style.display) ? "block" : "none";
+      if (el.style.display === "block") {
+        document.getElementById("inputDate").value = new Date().toISOString().split("T")[0];
+      }
+    }
+
+    function selectChip(el, groupName) {
+      el.parentElement.querySelectorAll('.tag-chip-choice').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+    }
+
+    function saveDiaryEntry() {
+      const date = document.getElementById("inputDate").value || new Date().toISOString().split("T")[0];
+      const weight = document.getElementById("inputWeight").value.trim();
+      const sealed = document.getElementById("checkSealed").checked;
+
+      const feelings = [];
+      document.querySelectorAll("#feelingsGroup input:checked").forEach(c => feelings.push(c.value));
+
+      const mealDesc = document.getElementById("mealDesc").value.trim();
+      const selectedMotive = document.querySelector("#motiveGroup .tag-chip-choice.selected");
+      const motive = selectedMotive ? selectedMotive.innerText : "";
+
+      const nutrients = [];
+      document.querySelectorAll("#nutriGroup input:checked").forEach(c => nutrients.push(c.value));
+
+      const newEntry = {
+        id: "entry-" + Date.now(),
+        date,
+        weight,
+        sealed,
+        feelings,
+        mealDesc,
+        motive,
+        nutrients,
+        photoId: window.lastCapturedPhotoId || null
+      };
+
+      appState.entries.unshift(newEntry);
+      persistState();
+      window.lastCapturedPhotoId = null;
+      document.getElementById("mealDesc").value = "";
+      document.getElementById("inputWeight").value = "";
+      toggleRecordForm();
+    }
+
+    let videoStream = null;
+    async function startCamera() {
+      const video = document.getElementById("cameraVideo");
+      try {
+        videoStream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: "environment" },
+          audio: false
+        });
+        video.srcObject = videoStream;
+      } catch (err) {
+        alert("无法直接唤起摄像头，你可以使用下方相册文件选择器直接存入照片。");
+      }
+    }
+
+    async function updateGhostOverlay() {
+      const ghostImg = document.getElementById("ghostOverlay");
+      for (let item of appState.entries) {
+        if (item.photoId) {
+          const src = await getPhotoFromDB(item.photoId);
+          if (src) {
+            ghostImg.src = src;
+            ghostImg.style.display = "block";
+            return;
+          }
+        }
+      }
+      ghostImg.style.display = "none";
+    }
+
+    function takeSnapshot() {
+      const video = document.getElementById("cameraVideo");
+      if (!video || !video.videoWidth) {
+        alert("请先打开摄像头取景！");
+        return;
+      }
+      const canvas = document.createElement("canvas");
+      const maxDim = 800;
+      let w = video.videoWidth, h = video.videoHeight;
+      if (w > maxDim) { h = Math.round((h * maxDim) / w); w = maxDim; }
+      canvas.width = w; canvas.height = h;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(video, 0, 0, w, h);
+      const base64 = canvas.toDataURL("image/jpeg", 0.75);
+
+      const photoId = "photo-" + Date.now();
+      savePhotoToDB(photoId, base64);
+      window.lastCapturedPhotoId = photoId;
+      alert("打卡拍照成功！稍后保存今日手账即可关联。");
+      updateGhostOverlay();
+    }
+
+    function handleFilePhoto(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement("canvas");
+          const maxDim = 800;
+          let w = img.width, h = img.height;
+          if (w > maxDim) { h = Math.round((h * maxDim) / w); w = maxDim; }
+          canvas.width = w; canvas.height = h;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, w, h);
+          const base64 = canvas.toDataURL("image/jpeg", 0.75);
+          const photoId = "photo-" + Date.now();
+          savePhotoToDB(photoId, base64);
+          window.lastCapturedPhotoId = photoId;
+          alert("照片已安全存入本地！保存今日手账即可绑定。");
+          updateGhostOverlay();
+        };
+        img.src = evt.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    async function playTimelapse() {
+      const imgTarget = document.getElementById("timelapseImg");
+      const photoIds = [];
+      const chronological = [...appState.entries].sort((a,b) => (a.date || "").localeCompare(b.date || ""));
+      chronological.forEach(i => { if (i.photoId) photoIds.push(i.photoId); });
+
+      if (photoIds.length === 0) {
+        alert("相册内暂无照片，先打卡几天拍照吧～");
+        return;
+      }
+
+      const photoSrcs = [];
+      for (let pid of photoIds) {
+        const s = await getPhotoFromDB(pid);
+        if (s) photoSrcs.push(s);
+      }
+
+      let frameIdx = 0;
+      const interval = setInterval(() => {
+        imgTarget.src = photoSrcs[frameIdx];
+        frameIdx = (frameIdx + 1) % photoSrcs.length;
+      }, 350);
+      setTimeout(() => clearInterval(interval), 8000);
+    }
+
+    function openSOS() { document.getElementById("sosModal").classList.add("show"); }
+    function closeSOS() { document.getElementById("sosModal").classList.remove("show"); }
+    function shredTrash() {
+      const text = document.getElementById("trashText").value.trim();
+      if (!text) return;
+      document.getElementById("trashText").value = "";
+      alert("🔥 情绪垃圾已被物理销毁！喝一口热淡盐水，身体正在夜间安心自洁燃脂。");
+      closeSOS();
+    }
+
+    function exportData() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appState, null, 2));
+      const a = document.createElement('a');
+      a.href = dataStr;
+      a.download = `减重避难所备份_${new Date().toISOString().split("T")[0]}.json`;
+      a.click();
+    }
+
+    function importData() {
+      const raw = document.getElementById("importBox").value.trim();
+      if (!raw) { alert("请先粘贴 JSON 数据！"); return; }
+      try {
+        const parsed = JSON.parse(raw);
+        if (parsed.entries) appState.entries = parsed.entries;
+        if (parsed.quotes) appState.quotes = parsed.quotes;
+        persistState();
+        alert("数据导入成功！");
+        document.getElementById("importBox").value = "";
+      } catch (err) {
+        alert("格式错误，请检查 JSON 文本！");
+      }
+    }
+
+    /* ==================== 7. GitHub 专属云同步逻辑 ==================== */
+    function getGHConfig() {
+      const repo = document.getElementById("ghRepo").value.trim();
+      const token = document.getElementById("ghToken").value.trim();
+      if (token) localStorage.setItem("gh_token", token);
+      return { repo, token };
+    }
+
+    async function syncToGitHub() {
+      const { repo, token } = getGHConfig();
+      if (!repo || !token) {
+        alert("请先输入你的 GitHub Token！");
+        return;
+      }
+
+      const cleanState = JSON.parse(JSON.stringify(appState));
+      const content = btoa(unescape(encodeURIComponent(JSON.stringify(cleanState, null, 2))));
+
+      try {
+        let sha = null;
+        const checkRes = await fetch(`https://api.github.com/repos/${repo}/contents/data.json`, {
+          headers: { "Authorization": `token ${token}` }
+        });
+        if (checkRes.ok) {
+          const fileData = await checkRes.json();
+          sha = fileData.sha;
+        }
+
+        const putRes = await fetch(`https://api.github.com/repos/${repo}/contents/data.json`, {
+          method: "PUT",
+          headers: {
+            "Authorization": `token ${token}`,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            message: `Sync diet diary: ${new Date().toISOString().split("T")[0]}`,
+            content: content,
+            sha: sha || undefined
+          })
+        });
+
+        if (putRes.ok) {
+          alert("🎉 纯文字日记已安全同步到 GitHub！照片完全保留在手机内部。");
+        } else {
+          alert("同步失败，请检查 Token 是否具备 repo 权限或仓库名称是否正确！");
+        }
+      } catch (err) {
+        alert("网络请求失败，请检查网络！");
+      }
+    }
+
+    async function pullFromGitHub() {
+      const { repo, token } = getGHConfig();
+      if (!repo || !token) {
+        alert("请先输入你的 GitHub Token！");
+        return;
+      }
+
+      try {
+        const res = await fetch(`https://api.github.com/repos/${repo}/contents/data.json`, {
+          headers: { "Authorization": `token ${token}` }
+        });
+        if (res.ok) {
+          const fileData = await res.json();
+          const decodedStr = decodeURIComponent(escape(atob(fileData.content)));
+          appState = JSON.parse(decodedStr);
+          persistState();
+          alert("🎉 已成功从 GitHub 拉取最新日记数据！");
+        } else {
+          alert("云端尚未找到 data.json，请先在记录后点击一次‘上传文字日记’！");
+        }
+      } catch (e) {
+        alert("拉取失败，请检查网络连接！");
+      }
+    }
+
+    window.onload = async () => {
+      await initDB();
+      loadSavedState();
+    };
+  </script>
+</body>
+</html>
