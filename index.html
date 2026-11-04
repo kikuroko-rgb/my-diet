@@ -122,6 +122,35 @@
     .badge-poop { background: var(--color-almond); color: var(--color-choco); }
     .badge-walk { background: #EDE5F7; color: var(--color-purple); }
 
+    /* 悬浮小女孩导入按钮 (FAB) */
+    .fab-girl-btn {
+      position: fixed;
+      bottom: 88px;
+      right: 20px;
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      background: #FFFDF9;
+      border: 2px solid var(--border-color);
+      box-shadow: 0 6px 18px rgba(69, 30, 2, 0.16);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 99;
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+      padding: 0;
+    }
+    .fab-girl-btn:active {
+      transform: scale(0.9);
+      box-shadow: 0 2px 8px rgba(69, 30, 2, 0.1);
+    }
+    .fab-girl-btn svg {
+      width: 38px;
+      height: 38px;
+      display: block;
+    }
+
     /* 2. 习惯打卡矩阵 */
     .habit-item-card {
       background: var(--card-bg); border-radius: var(--radius-card);
@@ -315,9 +344,8 @@
   <div class="container">
     <!-- Tab 1: 主页手账长列表 -->
     <section id="tab-diary" class="tab-content active">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+      <div style="margin-bottom:12px;">
         <h3 style="font-size: 1.05rem; font-weight:900;">📖 每日手账索引</h3>
-        <button onclick="openFastImport()" style="background:var(--color-choco); color:var(--color-almond); border:none; padding:7px 18px; border-radius:var(--radius-pill); font-size:0.86rem; font-weight:900; cursor:pointer;">📥 导入日记</button>
       </div>
       <div id="journalList" class="journal-list"></div>
     </section>
@@ -358,6 +386,41 @@
       <div id="photoGalleryGrid" style="display:grid; grid-template-columns:repeat(2, 1fr); gap:12px;"></div>
     </section>
   </div>
+
+  <!-- 右下角悬浮小女孩导入日记按钮 (FAB 方案A: 纯代码矢量插画，永不裂图) -->
+  <button class="fab-girl-btn" onclick="openFastImport()" title="导入日记">
+    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- 贝雷帽 (温暖焦糖色) -->
+      <path d="M18 42C18 25 34 16 50 16C68 16 82 25 82 42C82 44 76 46 50 46C24 46 18 44 18 42Z" fill="#EAB84B"/>
+      <!-- 帽子顶端小揪揪 -->
+      <path d="M48 16C48 12 52 12 52 16" stroke="#451E02" stroke-width="3" stroke-linecap="round"/>
+      
+      <!-- 头发 (黑巧底色) -->
+      <path d="M22 42C22 55 24 64 26 70C28 72 32 72 32 64C32 50 32 46 32 46L68 46C68 46 68 50 68 64C68 72 72 72 74 70C76 64 78 55 78 42" fill="#451E02"/>
+      
+      <!-- 脸部轮廓 -->
+      <path d="M28 42C28 58 35 68 50 68C65 68 72 58 72 42C72 41 28 41 28 42Z" fill="#FDF3E5"/>
+      
+      <!-- 齐刘海 -->
+      <path d="M28 42C33 46 40 45 50 42C60 45 67 46 72 42V38C60 38 40 38 28 38V42Z" fill="#451E02"/>
+      
+      <!-- 眼睛 (水灵圆眼) -->
+      <circle cx="41" cy="52" r="3.2" fill="#451E02"/>
+      <circle cx="59" cy="52" r="3.2" fill="#451E02"/>
+      <circle cx="42" cy="51" r="1" fill="#FFFFFF"/>
+      <circle cx="60" cy="51" r="1" fill="#FFFFFF"/>
+      
+      <!-- 治愈腮红 (浅粉) -->
+      <circle cx="34" cy="56" r="3.5" fill="#F8B6C3" opacity="0.8"/>
+      <circle cx="66" cy="56" r="3.5" fill="#F8B6C3" opacity="0.8"/>
+      
+      <!-- 弯弯微笑嘴巴 -->
+      <path d="M46 58C48 61 52 61 54 58" stroke="#451E02" stroke-width="2" stroke-linecap="round"/>
+      
+      <!-- 蝴蝶结/领结 (右下角精致小点缀) -->
+      <path d="M44 72L50 75L56 72L50 78Z" fill="#D96055"/>
+    </svg>
+  </button>
 
   <!-- 100% 全屏手账查看器 -->
   <div id="fullscreenViewer" class="fullscreen-modal">
@@ -539,7 +602,7 @@
   </nav>
 
   <script>
-    const DB_NAME = "HealingDietDB_v20";
+    const DB_NAME = "HealingDietDB_v21";
     let db = null;
     let videoStream = null;
     let currentDetailIndex = 0;
@@ -612,8 +675,7 @@
     }
 
     function loadSavedState() {
-      // 优先从所有可能的本地键中恢复数据，绝不白屏
-      const keys = ["DietApp_State_v20", "DietApp_State_v19", "DietApp_State_v18", "DietApp_State_v17", "DietApp_State_v16"];
+      const keys = ["DietApp_State_v21", "DietApp_State_v20", "DietApp_State_v19", "DietApp_State_v18", "DietApp_State_v17", "DietApp_State_v16"];
       let loaded = false;
       for (let k of keys) {
         const stored = localStorage.getItem(k);
@@ -637,7 +699,7 @@
     }
 
     function persistState() {
-      localStorage.setItem("DietApp_State_v20", JSON.stringify(appState));
+      localStorage.setItem("DietApp_State_v21", JSON.stringify(appState));
       renderAllViews();
     }
 
@@ -656,7 +718,6 @@
       if (tabId === 'tab-camera') renderPhotoGallery();
     }
 
-    /* 辅助：绘制微型火花走势线 SVG */
     function generateSparklineSvg(weights, color) {
       if (!weights || weights.length < 2) {
         return `<svg class="sparkline-svg" viewBox="0 0 38 16"><line x1="0" y1="8" x2="38" y2="8" stroke="${color}" stroke-width="2" stroke-dasharray="2,2"/></svg>`;
@@ -682,7 +743,6 @@
       `;
     }
 
-    /* 渲染主页手账长列表 */
     function renderJournalList() {
       const container = document.getElementById("journalList");
       if (!container) return;
@@ -799,7 +859,6 @@
       document.getElementById("fsNextBtn").disabled = (currentDetailIndex >= sorted.length - 1);
       document.getElementById("fsNavTitle").innerText = `${item.date} (${currentDetailIndex + 1}/${sorted.length})`;
 
-      // 1. 结构化饮食卡片 (一体化大卡片设计，对齐护肤卡片质感)
       let mealsLines = [];
       if (item.mealsList && Array.isArray(item.mealsList)) {
         mealsLines = item.mealsList;
@@ -831,7 +890,6 @@
         `;
       }
 
-      // 2. 护肤大卡片
       let skinHtml = "";
       if (item.skincare) {
         const s = typeof item.skincare === 'object' ? item.skincare : { feeling: item.skincare };
@@ -847,7 +905,6 @@
         `;
       }
 
-      // 3. 肠道与运动卡片
       let poopHtml = item.poop ? `
         <div style="background:#FFFBF0; border:2px solid var(--color-almond); border-radius:var(--radius-card); padding:10px 14px; margin-bottom:10px; font-size:0.86rem;">
           <strong>🚽 肠道与粑粑：</strong>${item.poop.shape || '正常排便'} (${item.poop.time || ''}) - ${item.poop.feeling || ''}
@@ -858,14 +915,12 @@
           <strong>🚶 晨间坡走：</strong>${item.walk.duration || 0} 分钟 - ${item.walk.detail || ''}
         </div>` : "";
 
-      // 4. 照片读取
       let photoHtml = "";
       if (item.photoId) {
         const photoSrc = await getPhotoFromDB(item.photoId);
         if (photoSrc) photoHtml = `<img src="${photoSrc}" style="width:100%; border-radius:var(--radius-card); margin-top:10px;" alt="打卡照">`;
       }
 
-      // 5. 负面情绪折叠暗盒
       const emotionText = item.hiddenEmotion || item.emotion || "";
       let emotionFoldHtml = emotionText ? `
         <div class="emotion-secret-box">
@@ -924,7 +979,6 @@
       arrow.innerText = content.classList.contains('open') ? "▲ 点击收起" : "▼ 点击展开";
     }
 
-    /* 左右滑动翻页 */
     let touchStartX = 0, touchEndX = 0;
     const fsViewer = document.getElementById('fullscreenViewer');
     fsViewer.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, { passive: true });
@@ -933,7 +987,6 @@
       if (Math.abs(touchEndX - touchStartX) > 50) stepDetail(touchEndX < touchStartX ? 1 : -1);
     }, { passive: true });
 
-    /* 渲染护肤专页 */
     function renderSkincareList() {
       const container = document.getElementById("skincareList");
       if (!container) return;
@@ -963,7 +1016,6 @@
       if (count === 0) container.innerHTML = `<div style="text-align:center; padding:30px; font-size:0.85rem; color:var(--text-sub);">暂无护肤记录～</div>`;
     }
 
-    /* 渲染习惯矩阵 (字典索引高效计算) */
     function renderHabitMatrix() {
       const container = document.getElementById("habitMatrixList");
       if (!container) return;
@@ -1112,7 +1164,6 @@
       } else walkSec.style.display = "none";
     }
 
-    /* 相册与拍照 */
     async function renderPhotoGallery() {
       const container = document.getElementById("photoGalleryGrid");
       if (!container) return;
@@ -1233,7 +1284,6 @@
       setTimeout(() => clearInterval(timer), 10000);
     }
 
-    /* 导入与微调 */
     function openFastImport() {
       document.getElementById("editModalTitle").innerText = "📥 粘贴导入日记";
       document.getElementById("importModeWrap").style.display = "block";
@@ -1302,7 +1352,6 @@
       alert("微调已保存！");
     }
 
-    /* 紧急救援 */
     function openSOS() { document.getElementById("sosModal").classList.add("show"); }
     function closeSOS() { document.getElementById("sosModal").classList.remove("show"); }
     function shredTrash() {
@@ -1311,11 +1360,9 @@
       closeSOS();
     }
 
-    /* 同步弹窗 */
     function openSyncModal() { document.getElementById("syncModal").classList.add("show"); }
     function closeSyncModal() { document.getElementById("syncModal").classList.remove("show"); }
 
-    /* GitHub 同步 */
     async function syncToGitHub() {
       const repo = document.getElementById("ghRepo").value.trim();
       const token = document.getElementById("ghToken").value.trim();
